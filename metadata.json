@@ -1,0 +1,8 @@
+{
+  "name": "مرکزی جامعۃ البنات پرانا لاری اڈا قصور",
+  "description": "مرکزی جامعۃ البنات پرانا لاری اڈا قصور — مستند دینی تعلیم، آن لائن کلاسز، آن لائن فقہی سوال و جواب، اور تنظیم المدارس نتائج۔",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
