@@ -1,514 +1,533 @@
-export type PageId =
-  | 'home'
-  | 'about'
-  | 'classes'
-  | 'darul-ifta'
-  | 'results'
-  | 'ceremony'
-  | 'departments'
-  | 'donations'
-  | 'gallery';
+import {
+  FiqhQuestion,
+  JamiaAdmission,
+  JamiaFeeRecord,
+  JamiaResult,
+  JamiaSiteConfig,
+  JamiaStaff,
+  JamiaStudent,
+  OnlineCourse,
+} from '../types/jamia';
 
-export interface LeaderProfile {
-  id: string;
-  role: string;
-  arabicRole: string;
-  name: string;
-  honorific: string;
-  bio: string;
-  image: string;
-}
-
-export interface GalleryItem {
-  id: string;
-  src: string;
-  title: string;
-  category: 'اکابرین و مشائخ' | 'تقسیمِ اسناد' | 'درس و تدریس' | 'جامعہ جھلکیاں';
-  caption: string;
-}
-
-export interface OnlineCourse {
-  id: string;
-  title: string;
-  arabicTitle: string;
-  duration: string;
-  timing: string;
-  level: string;
-  summary: string;
-}
-
-export interface DepartmentItem {
-  id: string;
-  num: string;
-  title: string;
-  arabicTitle: string;
-  duration: string;
-  summary: string;
-}
-
-export interface FatwaItem {
-  id: string;
-  code: string;
-  category: 'عبادات' | 'معاملات' | 'نکاح و طلاق' | 'جدید مسائل';
-  question: string;
-  answer: string;
-  mufti: string;
-  date: string;
-}
-
-export interface SubjectMark {
-  subject: string;
-  total: number;
-  obtained: number;
-}
-
-export interface StudentResult {
-  rollNo: string;
-  regNo: string;
-  name: string;
-  fatherName: string;
-  darja: string;
-  year: string;
-  board: string;
-  status: 'کامیاب' | 'امتیازی کامیابی';
-  grade: string;
-  totalMarks: number;
-  obtainedMarks: number;
-  percentage: string;
-  subjects: SubjectMark[];
-}
-
-export interface DonationAccount {
-  id: string;
-  label: string;
-  bankName: string;
-  accountTitle: string;
-  accountNumber: string;
-  iban: string;
-  branch: string;
-}
-
-export const JAMIA_INFO = {
-  name: 'مرکزی جامعۃ البنات',
-  fullName: 'مرکزی جامعۃ البنات پرانا لاری اڈا قصور',
-  arabicName: 'الجامعة المركزية للبنات قصور',
-  location: 'پرانا لاری اڈا، قصور، پنجاب، پاکستان',
-  affiliation: 'ملحق تنظیم المدارس اہلسنت پاکستان',
+export const INITIAL_SITE_CONFIG: JamiaSiteConfig = {
+  name: 'مرکزی جامعۃ البنات پرانا لاری اڈا قصور',
+  subtitle: 'مستند دینی و عصری تعلیم، آن لائن کورسز، دارالافتاء اور تربیتی ادارہ',
+  address: 'پرانا لاری اڈا، قصور، پنجاب، پاکستان',
   phone: '03006588699',
-  phoneIntl: '+92 300 6588699',
   email: 'Jamiatulbinnat786@gmail.com',
   whatsappChannel: 'https://whatsapp.com/channel/0029VbD9bWc2ZjCwf7PBeU2g',
-  whatsappDirect: 'https://wa.me/923006588699',
-  tiktok: 'https://vt.tiktok.com/ZSp9yS4q4/',
-  heroVerse: 'رَبِّ زِدْنِي عِلْمًا',
-  heroHadith: 'طَلَبُ الْعِلْمِ فَرِيضَةٌ عَلَى كُلِّ مُسْلِمٍ',
-  heroTagline: 'دینی و عصری علوم کا مستند مرکز',
+  tiktokUrl: 'https://vt.tiktok.com/ZSp9yS4q4/',
+  heroNotice:
+    'نئے تعلیمی سال 2026–2027 کے داخلے جاری ہیں — آن لائن کلاسز، درسِ نظامی (عالمہ کورس) اور فرض علوم کے داخلہ فارم دستیاب ہیں',
+  annualProgramTitle: 'سالانہ تقریبِ تقسیمِ اسناد و دستارِ فضیلت',
+  annualProgramDate: '25 رجب المرجب / اتوار صبح 9:00 بجے',
+  annualProgramVenue: 'مرکزی جامعۃ البنات، پرانا لاری اڈا، قصور',
+  annualProgramDetails:
+    'سالانہ امتحان میں نمایاں پوزیشن حاصل کرنے والی طالبات، فاضلاتِ درسِ نظامی اور حفاظِ کرام کو اسناد و انعامات پیش کیے جائیں گے۔ علمائے کرام و مشائخ عظام کے خصوصی بیانات ہوں گے۔',
+  bankName: 'میزان بینک لمیٹڈ (Meezan Bank)',
+  accountTitle: 'Markazi Jamia tul Banat Kasur',
+  accountNumber: '0241-0105849210',
+  iban: 'PK48MEZN0002410105849210',
+  easypaisa: '0300-6588699 (صاحبزادہ پیر مفتی محمد ارشاد علی قادری)',
 };
 
-export const LEADERS: LeaderProfile[] = [
+export const LEADERSHIP_PROFILES = [
   {
-    id: 'bani',
-    role: 'بانیٔ جامعہ',
-    arabicRole: 'المؤسس رحمه الله',
-    name: 'مفتی محمد عبداللہ قادری اشرفی رضوی رحمۃ اللہ علیہ',
-    honorific: 'پیرِ طریقت رہبرِ شریعت شیخ الحدیث و التفسیر ابوالعلیٰ',
-    bio: 'بانی مرکزی جامعۃ البنات پرانا لاری اڈا قصور، جن کی علمی و روحانی بصیرت نے خطۂ قصور میں تعلیمِ نسواں کا یہ عظیم چراغ روشن فرمایا۔',
+    id: 'founder',
+    badge: 'بانیِ جامعہ',
+    badgeEn: 'Founder of Jamia',
+    name: 'پیرِ طریقت رہبرِ شریعت شیخ الحدیث و تفسیر ابوالعلیٰ مفتی محمد عبداللہ قادری اشرفی رضوی رحمۃ اللہ تعالیٰ علیہ',
+    nameEn:
+      'Pir-e-Tariqat, Sheikh-ul-Hadith wal-Tafsir Abul-Ala Mufti Muhammad Abdullah Qadri Ashrafi Razvi (RA)',
+    role: 'بانی مرکزی جامعۃ البنات پرانا لاری اڈہ قصور',
+    roleEn: 'Founder, Markazi Jamia tul Banat Purana Lari Adda Kasur',
     image: 'https://i.postimg.cc/02H4crGc/Bane-jamia.jpg',
   },
   {
-    id: 'sarparast',
-    role: 'سرپرستِ اعلیٰ',
-    arabicRole: 'الراعي الأعلى',
-    name: 'صاحبزادہ پیر مفتی محمد اختر علی قادری اشرفی رضوی',
-    honorific: 'مبلغِ عالمِ اسلام، وارثِ مسند حضور محدثِ اعظم قصوری',
-    bio: 'سجادہ نشین آستانہ عالیہ محدثِ اعظم قصور و سرپرستِ اعلیٰ مرکزی جامعۃ البنات، دینی مدارس و دعوتِ حق کے عالمی داعی۔',
-    image: 'https://i.postimg.cc/Z5GMzgMS/Whats-App-Image-2026-11-12-at-2-46-59-PM.jpg',
+    id: 'patron',
+    badge: 'سرپرستِ اعلیٰ',
+    badgeEn: 'Patron-in-Chief',
+    name: 'مبلغِ عالمِ اسلام پیرِ طریقت رہبرِ شریعت شیخ الحدیث و التفسیر وارثِ مسند حضور محدثِ اعظم قصوری صاحبزادہ پیر مفتی محمد اختر علی قادری اشرفی رضوی',
+    nameEn:
+      'Muballigh-e-Islam, Sheikh-ul-Hadith wal-Tafsir Sahibzada Pir Mufti Muhammad Akhtar Ali Qadri Ashrafi Razvi',
+    role: 'سجادہ نشین آستانہ عالیہ محدثِ اعظم قصور و سرپرستِ اعلیٰ مرکزی جامعۃ البنات',
+    roleEn: 'Sajjada Nasheen Astana-e-Aliya Muhaddis-e-Azam Kasur & Patron-in-Chief',
+    image: 'https://i.postimg.cc/7YQRmb1n/Onar-jamia.jpg',
   },
   {
     id: 'nazim',
-    role: 'ناظمِ اعلیٰ',
-    arabicRole: 'الناظم الأعلى',
+    badge: 'ناظمِ اعلیٰ',
+    badgeEn: 'Chief Administrator',
     name: 'حضرت صاحبزادہ پیر مفتی محمد ارشاد علی قادری اشرفی رضوی',
-    honorific: 'ناظمِ اعلیٰ و مہتمم جامعہ',
-    bio: 'ناظمِ اعلیٰ مرکزی جامعۃ البنات پرانا لاری اڈا قصور، تعلیمی نظم و نسق، آن لائن شعبہ جات اور دارالافتاء کے نگران۔',
-    image: 'https://i.postimg.cc/7YQRmb1n/Onar-jamia.jpg',
+    nameEn: 'Hazrat Sahibzada Pir Mufti Muhammad Irshad Ali Qadri Ashrafi Razvi',
+    role: 'ناظمِ اعلیٰ مرکزی جامعۃ البنات پرانا لاری اڈہ قصور',
+    roleEn: 'Nazim-e-Ala, Markazi Jamia tul Banat Purana Lari Adda Kasur',
+    image: 'https://i.postimg.cc/zXPQ03wt/Whats-App-Image-2026-11-12-at-1-15-33-PM.jpg',
   },
 ];
 
-export const GALLERY_IMAGES: GalleryItem[] = [
+export const HERO_BANNERS = [
+  {
+    id: 'b1',
+    tag: 'مرکزی جامعۃ البنات قصور',
+    tagEn: 'Markazi Jamia tul Banat Kasur',
+    title: 'بناتِ اسلام کی مستند دینی و روحانی تعلیم کا عظیم مرکز',
+    titleEn: 'A Premier Center for Authentic Islamic Education & Spiritual Upbringing',
+    description:
+      'درسِ نظامی، تجوید و قرأت، حفظِ قرآن اور فقہی تربیت — تجربہ کار معلمات اور علمائے کرام کی نگرانی میں۔',
+    descriptionEn:
+      'Dars-e-Nizami, Tajweed & Qiraat, Hifz-ul-Quran, and Fiqhi mentorship under qualified female scholars and Muftis.',
+    image: 'https://i.postimg.cc/L60WNhkw/Whats-App-Image-2026-11-12-at-1-15-34-PM.jpg',
+    actionLabel: 'آن لائن داخلہ فارم',
+    actionLabelEn: 'Online Admission Form',
+    targetSection: 'admissions' as const,
+  },
+  {
+    id: 'b2',
+    tag: 'آن لائن تعلیمی نظام',
+    tagEn: 'Online Learning System',
+    title: 'گھر بیٹھے باپردہ آن لائن درسِ نظامی و ناظرہ کلاسز',
+    titleEn: 'Interactive Online Dars-e-Nizami & Quran Classes from Home',
+    description:
+      'دنیا بھر سے طالبات و خواتین کے لیے زوم اور واٹس ایپ پر روزانہ باقاعدہ کلاسز کا اہتمام۔',
+    descriptionEn:
+      'Structured daily live sessions via Zoom and WhatsApp for female students worldwide.',
+    image: 'https://i.postimg.cc/WbfyXtmY/Whats-App-Image-2026-11-12-at-1-15-34-PM-(1).jpg',
+    actionLabel: 'آن لائن کلاسز دیکھیں',
+    actionLabelEn: 'Explore Online Classes',
+    targetSection: 'classes' as const,
+  },
+  {
+    id: 'b3',
+    tag: 'تقریبِ سعید',
+    tagEn: 'Annual Convocation',
+    title: 'سالانہ تقریبِ تقسیمِ اسناد و دستارِ فضیلت پروگرام',
+    titleEn: 'Annual Certificate & Sanad Distribution Ceremony',
+    description:
+      'پوزیشن ہولڈر طالبات کی حوصلہ افزائی، ختمِ بخاری شریف اور مشائخِ عظام کی خصوصی شرکت۔',
+    descriptionEn:
+      'Honoring top-ranking graduates, Khatm-e-Bukhari Sharif, and special spiritual addresses by esteemed scholars.',
+    image: 'https://i.postimg.cc/sgQN8yKm/Whats-App-Image-2026-11-12-at-1-15-35-PM.jpg',
+    actionLabel: 'پروگرام کی تفصیلات',
+    actionLabelEn: 'View Program Schedule',
+    targetSection: 'program' as const,
+  },
+];
+
+export const GALLERY_PHOTOS = [
   {
     id: 'g1',
-    src: 'https://i.postimg.cc/02H4crGc/Bane-jamia.jpg',
-    title: 'بانیٔ جامعہ مفتی محمد عبداللہ قادری رحمۃ اللہ علیہ',
-    category: 'اکابرین و مشائخ',
-    caption: 'تاسیسی و روحانی سرپرستی کا یادگار منظر',
+    title: 'تقریبِ تقسیمِ اسناد و انعامات',
+    titleEn: 'Annual Sanad & Prize Distribution Ceremony',
+    src: 'https://i.postimg.cc/L60WNhkw/Whats-App-Image-2026-11-12-at-1-15-34-PM.jpg',
   },
   {
     id: 'g2',
-    src: 'https://i.postimg.cc/7YQRmb1n/Onar-jamia.jpg',
-    title: 'حضرت صاحبزادہ پیر مفتی محمد ارشاد علی قادری',
-    category: 'اکابرین و مشائخ',
-    caption: 'ناظمِ اعلیٰ مرکزی جامعۃ البنات قصور',
+    title: 'علمائے کرام و مشائخ کی تشریف آوری',
+    titleEn: 'Arrival of Esteemed Ulama & Mashaykh',
+    src: 'https://i.postimg.cc/WbfyXtmY/Whats-App-Image-2026-11-12-at-1-15-34-PM-(1).jpg',
   },
   {
     id: 'g3',
-    src: 'https://i.postimg.cc/Z5GMzgMS/Whats-App-Image-2026-11-12-at-2-46-59-PM.jpg',
-    title: 'صاحبزادہ پیر مفتی محمد اختر علی قادری',
-    category: 'اکابرین و مشائخ',
-    caption: 'سرپرستِ اعلیٰ و سجادہ نشین آستانہ عالیہ محدثِ اعظم قصور',
+    title: 'جامعہ کا تعلیمی و تربیتی ماحول',
+    titleEn: 'Academic & Spiritual Environment at Jamia',
+    src: 'https://i.postimg.cc/sgQN8yKm/Whats-App-Image-2026-11-12-at-1-15-35-PM.jpg',
   },
   {
     id: 'g4',
-    src: 'https://i.postimg.cc/zXPQ03wt/Whats-App-Image-2026-11-12-at-1-15-33-PM.jpg',
-    title: 'تقریبِ تقسیمِ اسناد و دعا',
-    category: 'تقسیمِ اسناد',
-    caption: 'سالانہ محفلِ دستار و ردائے فضیلت کی روح پرور جھلک',
+    title: 'امتحانی ہال اور تعلیمی سرگرمیاں',
+    titleEn: 'Examination Hall & Academic Activities',
+    src: 'https://i.postimg.cc/XYGzh3xD/Whats-App-Image-2026-11-12-at-1-15-36-PM.jpg',
   },
   {
     id: 'g5',
-    src: 'https://i.postimg.cc/L60WNhkw/Whats-App-Image-2026-11-12-at-1-15-34-PM.jpg',
-    title: 'علماء و مشائخ کی شرکت',
-    category: 'اکابرین و مشائخ',
-    caption: 'سالانہ تقریب میں ممتاز علمی شخصیات کی آمد',
+    title: 'سالانہ محفلِ میلاد و نعت',
+    titleEn: 'Annual Mehfil-e-Milad & Naat Gathering',
+    src: 'https://i.postimg.cc/y8gb5Bnp/Whats-App-Image-2026-11-12-at-1-16-34-PM.jpg',
   },
   {
     id: 'g6',
-    src: 'https://i.postimg.cc/WbfyXtmY/Whats-App-Image-2026-11-12-at-1-15-34-PM-(1).jpg',
-    title: 'علمی مجلس و خطابِ خصوصی',
-    category: 'تقسیمِ اسناد',
-    caption: 'طالبات کی علمی و اخلاقی تربیت کے حوالے سے بیان',
+    title: 'طالبات میں اسناد کی تقسیم',
+    titleEn: 'Presentation of Certificates to Graduates',
+    src: 'https://i.postimg.cc/wjyGPHFS/Whats-App-Image-2026-11-12-at-1-16-35-PM.jpg',
   },
   {
     id: 'g7',
-    src: 'https://i.postimg.cc/sgQN8yKm/Whats-App-Image-2026-11-12-at-1-15-35-PM.jpg',
-    title: 'امتحانی و تعلیمی جائزہ',
-    category: 'درس و تدریس',
-    caption: 'تنظیم المدارس نصاب کے مطابق تعلیمی سرگرمیاں',
+    title: 'خصوصی دعا و اختتامی نشست',
+    titleEn: 'Closing Dua & Special Prayer Session',
+    src: 'https://i.postimg.cc/dVkxXv4P/Whats-App-Image-2026-11-12-at-1-16-36-PM.jpg',
   },
   {
     id: 'g8',
-    src: 'https://i.postimg.cc/XYGzh3xD/Whats-App-Image-2026-11-12-at-1-15-36-PM.jpg',
-    title: 'جامعہ کا روحانی ماحول',
-    category: 'جامعہ جھلکیاں',
-    caption: 'مرکزی جامعۃ البنات پرانا لاری اڈا قصور کی تقریب',
-  },
-  {
-    id: 'g9',
-    src: 'https://i.postimg.cc/y8gb5Bnp/Whats-App-Image-2026-11-12-at-1-16-34-PM.jpg',
-    title: 'اسناد و اعزازات کی تقسیم',
-    category: 'تقسیمِ اسناد',
-    caption: 'نمایاں پوزیشن حاصل کرنے والی طالبات کے لیے اعزازات',
-  },
-  {
-    id: 'g10',
-    src: 'https://i.postimg.cc/wjyGPHFS/Whats-App-Image-2026-11-12-at-1-16-35-PM.jpg',
-    title: 'محفلِ نعت و قراءت',
-    category: 'تقسیمِ اسناد',
-    caption: 'سالانہ پروگرام میں تلاوتِ قرآن و نعتِ رسول مقبول ﷺ',
-  },
-  {
-    id: 'g11',
-    src: 'https://i.postimg.cc/dVkxXv4P/Whats-App-Image-2026-11-12-at-1-16-36-PM.jpg',
-    title: 'حفظ و ناظرہ کی کلاسز',
-    category: 'درس و تدریس',
-    caption: 'مستند معلمات کی نگرانی میں قرآنِ پاک کی تعلیم',
-  },
-  {
-    id: 'g12',
-    src: 'https://i.postimg.cc/qvh5Y0jJ/Whats-App-Image-2026-11-12-at-1-16-37-PM.jpg',
-    title: 'علمی و تربیتی نشست',
-    category: 'درس و تدریس',
-    caption: 'شعبہ درسِ نظامی کی تعلیمی سرگرمی',
-  },
-  {
-    id: 'g13',
-    src: 'https://i.postimg.cc/6p2mSwY6/Whats-App-Image-2026-11-12-at-1-16-37-PM-(1).jpg',
-    title: 'استقبالیہ و انتظامی کمیٹی',
-    category: 'جامعہ جھلکیاں',
-    caption: 'جامعہ کے سالانہ اجتماع کی تیاری و انتظام',
-  },
-  {
-    id: 'g14',
-    src: 'https://i.postimg.cc/MpMF4xdT/Whats-App-Image-2026-11-12-at-1-16-38-PM.jpg',
-    title: 'اسنادِ فضیلت کی تقریب',
-    category: 'تقسیمِ اسناد',
-    caption: 'فارغ التحصیل عالمات و حافظات کی حوصلہ افزائی',
-  },
-  {
-    id: 'g15',
-    src: 'https://i.postimg.cc/wjyGPH0B/Whats-App-Image-2026-11-12-at-1-16-38-PM-(1).jpg',
     title: 'مرکزی جامعۃ البنات قصور',
-    category: 'جامعہ جھلکیاں',
-    caption: 'پرانا لاری اڈا قصور کی علمی و روحانی جھلک',
+    titleEn: 'Markazi Jamia tul Banat Campus Kasur',
+    src: 'https://i.postimg.cc/qvh5Y0jJ/Whats-App-Image-2026-11-12-at-1-16-37-PM.jpg',
   },
 ];
 
-export const DEPARTMENTS: DepartmentItem[] = [
-  {
-    id: 'nazra-hifz',
-    num: '01',
-    title: 'شعبہ ناظرہ و حفظِ قرآن',
-    arabicTitle: 'شعبة القراءة والتحفيظ',
-    duration: 'دو تا تین سال',
-    summary: 'مخارج کی درست ادائیگی کے ساتھ ناظرہ اور مکمل حفظِ قرآن مع تجوید۔',
-  },
-  {
-    id: 'dars-e-nizami',
-    num: '02',
-    title: 'شعبہ درسِ نظامی (عالمہ کورس)',
-    arabicTitle: 'الدرس النظامي للعالمات',
-    duration: 'چھ سالہ نصاب',
-    summary: 'تنظیم المدارس کے مطابق تفسیر، حدیث، فقہ، اصولِ فقہ اور عربی ادب۔',
-  },
-  {
-    id: 'tajweed',
-    num: '03',
-    title: 'شعبہ تجوید و قراءت',
-    arabicTitle: 'شعبة التجويد والقراءات',
-    duration: 'ایک سالہ کورس',
-    summary: 'قواعدِ تجوید، لحنِ جلی و خفی سے بچاؤ اور حسنِ قراءت کی مشق۔',
-  },
-  {
-    id: 'takhassus',
-    num: '04',
-    title: 'شعبہ تخصص فی الفقہ',
-    arabicTitle: 'التخصص في الفقه الحنفي',
-    duration: 'ایک سالہ تخصص',
-    summary: 'عالمات کے لیے فقہِ حنفی، فتاویٰ نویسی اور جدید مسائل کی تحقیق۔',
-  },
-  {
-    id: 'online-academy',
-    num: '05',
-    title: 'آن لائن دینی اکیڈمی',
-    arabicTitle: 'الأكاديمية الدينية الإلكترونية',
-    duration: 'صبح و شام بیچز',
-    summary: 'گھر بیٹھے دنیا بھر کی طالبات کے لیے باقاعدہ لائیو دینی کلاسز۔',
-  },
-  {
-    id: 'tarbiyat',
-    num: '06',
-    title: 'شعبہ خطابت و تربیتِ نسواں',
-    arabicTitle: 'شعبة الخطابة والتربية',
-    duration: 'ہفتہ وار نشست',
-    summary: 'اصلاحِ معاشرہ، سنتِ نبوی ﷺ کی تعلیم اور اسلامی آدابِ زندگی۔',
-  },
-];
-
-export const ONLINE_COURSES: OnlineCourse[] = [
+export const INITIAL_COURSES: (OnlineCourse & {
+  titleEn: string;
+  durationEn: string;
+  timingEn: string;
+  teacherEn: string;
+  seatsEn: string;
+  descriptionEn: string;
+})[] = [
   {
     id: 'c1',
-    title: 'آن لائن ناظرہ و تجوید کورس',
-    arabicTitle: 'دورة القراءة والتجويد',
-    duration: 'ماہانہ بنیاد پر',
-    timing: 'صبح 9 تا شام 8 (مختلف اوقات)',
-    level: 'بچیاں اور خواتین',
-    summary: 'مدنی قاعدہ، درست مخارج اور مکمل قرآنِ پاک کی انفرادی توجہ کے ساتھ تعلیم۔',
+    title: 'درسِ نظامی (عالمہ کورس)',
+    titleEn: 'Dars-e-Nizami (Alimah Degree Program)',
+    duration: '6 سالہ مکمل نصاب (تنظیم المدارس)',
+    durationEn: '6-Year Complete Curriculum (Tanzeem-ul-Madaris)',
+    timing: 'صبح 8:30 تا 12:30 / شام 4:00 تا 6:00',
+    timingEn: 'Morning 8:30–12:30 / Evening 4:00–6:00',
+    teacher: 'فاضلات و مفتیانِ کرام',
+    teacherEn: 'Qualified Alimahs & Muftis',
+    seats: 'داخلے جاری ہیں',
+    seatsEn: 'Admissions Open',
+    description: 'تفسیر، حدیث، فقہ، اصولِ فقہ، صرف و نحو اور عقائدِ اہلِ سنت کا مکمل مستند کورس۔',
+    descriptionEn:
+      'Comprehensive study of Tafsir, Hadith, Fiqh, Usul-ul-Fiqh, Arabic Grammar, and Sunni Creed.',
   },
   {
     id: 'c2',
-    title: 'آن لائن عالمہ کورس (درسِ نظامی)',
-    arabicTitle: 'الدورة النظامية عبر الإنترنت',
-    duration: 'چار تا چھ سال',
-    timing: 'روزانہ دو گھنٹے لائیو کلاس',
-    level: 'میٹرک یا مساوی',
-    summary: 'صرف و نحو، فقہ، حدیث اور تفسیر کی باقاعدہ لائیو اسباق اور امتحانات۔',
+    title: 'تجوید و قرأت و ناظرہ قرآن',
+    titleEn: 'Tajweed, Qiraat & Nazra Quran',
+    duration: '1 سالہ کورس',
+    durationEn: '1-Year Certificate Course',
+    timing: 'صبح اور شام مختلف اوقات',
+    timingEn: 'Flexible Morning & Evening Batches',
+    teacher: 'قاریہ معلمات',
+    teacherEn: 'Certified Qariah Instructors',
+    seats: 'محدود نشستیں',
+    seatsEn: 'Limited Seats',
+    description: 'مخارج و صفات کی درستگی کے ساتھ قرآنِ پاک کی تلاوت اور بنیادی ضروری مسائل۔',
+    descriptionEn:
+      'Mastery of Quranic pronunciation (Makharij & Sifaat) with foundational daily Islamic rulings.',
   },
   {
     id: 'c3',
-    title: 'فرض علوم و طہارت کورس',
-    arabicTitle: 'دورة العلوم الضرورية',
-    duration: 'تین ماہ',
-    timing: 'شام 4 تا 5 بجے',
-    level: 'تمام خواتین کے لیے',
-    summary: 'وضو، غسل، نماز، روزہ، زکوٰۃ اور روزمرہ شرعی مسائل کی آسان تربیت۔',
+    title: 'حفظِ قرآنِ مجید',
+    titleEn: 'Hifz-ul-Quran Program',
+    duration: '2 سے 3 سال',
+    durationEn: '2 to 3 Years',
+    timing: 'صبح 8:00 تا 1:00',
+    timingEn: 'Morning 8:00 AM – 1:00 PM',
+    teacher: 'حافظہ معلمات',
+    teacherEn: 'Hafizah Mentors',
+    seats: 'داخلے جاری ہیں',
+    seatsEn: 'Admissions Open',
+    description: 'روزانہ سبق، سبقی اور منزل کی پابندی کے ساتھ باقاعدہ حفظِ قرآن۔',
+    descriptionEn:
+      'Structured Quran memorization with daily Sabaq, Sabqi, and Manzil revision tracking.',
   },
   {
     id: 'c4',
-    title: 'آن لائن حفظِ قرآن و سورتیں',
-    arabicTitle: 'تحفيظ القرآن الكريم',
-    duration: 'طالبہ کی استعداد کے مطابق',
-    timing: 'انفرادی وقت کا انتخاب',
-    level: 'ہر عمر کی طالبات',
-    summary: 'مسنون سورتیں یا مکمل قرآنِ کریم کی یادداشت اور روزانہ سبق و منزل۔',
+    title: 'فرض علوم کورس (خواتین)',
+    titleEn: 'Farz Uloom Course (For Women)',
+    duration: '6 ماہ مختصر کورس',
+    durationEn: '6-Month Short Course',
+    timing: 'ہفتہ وار 4 دن — شام 5:00 تا 6:00',
+    timingEn: '4 Days/Week — 5:00 PM – 6:00 PM',
+    teacher: 'مفتیہ و فاضلہ معلمات',
+    teacherEn: 'Muftiyah & Senior Scholars',
+    seats: 'آن لائن رجسٹریشن کھلی ہے',
+    seatsEn: 'Online Registration Open',
+    description: 'نماز، روزہ، زکوٰۃ، طہارت اور گھریلو زندگی کے ضروری شرعی مسائل۔',
+    descriptionEn:
+      'Essential rulings of Salah, Fasting, Zakah, Purification, and family life.',
   },
 ];
 
-export const INITIAL_FATAWA: FatwaItem[] = [
+export const INITIAL_STUDENTS: JamiaStudent[] = [
   {
-    id: 'f1',
-    code: 'فتویٰ نمبر 1042',
-    category: 'عبادات',
-    question: 'عورت کے لیے گھر میں نماز پڑھتے وقت دوپٹہ یا چادر کی کیا حد ہونی چاہیے؟',
-    answer: 'عورت پر نماز میں سترِ عورت واجب ہے؛ سر کے تمام بال، کان، گردن اور کلائیاں ڈھکی ہونی چاہئیں۔ اگر دوپٹہ اتنا باریک ہو کہ بالوں کی رنگت ظاہر ہو تو نماز درست نہ ہوگی، لہٰذا موٹا دوپٹہ یا چادر اوڑھنا لازم ہے۔',
-    mufti: 'مفتی محمد ارشاد علی قادری',
-    date: 'ربیع الثانی 1448ھ',
+    id: 'ST-101',
+    rollNo: 'JB-2026-01',
+    name: 'عائشہ صدیقہ',
+    fatherName: 'محمد طارق',
+    darja: 'درجہ خامسہ (عالمہ)',
+    phone: '0301-4421980',
+    city: 'قصور',
+    admissionDate: '2024-04-10',
+    status: 'فعال',
+    feeStatus: 'ادا شدہ',
+    attendanceRate: 97,
   },
   {
-    id: 'f2',
-    code: 'فتویٰ نمبر 1041',
-    category: 'معاملات',
-    question: 'کیا سونے کے زیورات پر ہر سال زکوٰۃ واجب ہوتی ہے اگر وہ استعمال میں ہوں؟',
-    answer: 'جی ہاں، فقہِ حنفی کے مطابق استعمال کے سونے چاندی کے زیورات پر بھی اگر وہ نصاب (ساڑھے سات تولہ سونا یا ساڑھے باون تولہ چاندی کی مالیت) کو پہنچیں اور سال گزر جائے تو ڈھائی فیصد زکوٰۃ ادا کرنا فرض ہے۔',
-    mufti: 'دارالافتاء مرکزی جامعۃ البنات',
-    date: 'ربیع الثانی 1448ھ',
+    id: 'ST-102',
+    rollNo: 'JB-2026-02',
+    name: 'فاطمہ الزہرا',
+    fatherName: 'حافظ عبدالحمید',
+    darja: 'درجہ رابعہ',
+    phone: '0321-7784512',
+    city: 'قصور',
+    admissionDate: '2024-05-02',
+    status: 'فعال',
+    feeStatus: 'ادا شدہ',
+    attendanceRate: 95,
   },
   {
-    id: 'f3',
-    code: 'فتویٰ نمبر 1039',
-    category: 'جدید مسائل',
-    question: 'آن لائن کلاس کے دوران خواتین کا بغیر شرعی عذر کیمرہ آن رکھنا کیسا ہے؟',
-    answer: 'دینی تعلیم کے دوران اگر معلمہ اور طالبات کا ماحول مکمل مستور ہو تب بھی غیر محرم تک رسائی یا ریکارڈنگ کے اندیشے کے پیشِ نظر کیمرہ بند رکھ کر آواز کے ذریعے سبق پڑھنا افضل اور احتیاط کے قریب ہے۔',
-    mufti: 'مفتی محمد ارشاد علی قادری',
-    date: 'ربیع الاول 1448ھ',
+    id: 'ST-103',
+    rollNo: 'JB-2026-03',
+    name: 'خدیجہ بتول',
+    fatherName: 'غلام مصطفیٰ',
+    darja: 'حفظ القرآن',
+    phone: '0333-6510294',
+    city: 'پتوکی',
+    admissionDate: '2025-03-18',
+    status: 'فعال',
+    feeStatus: 'باقی',
+    attendanceRate: 91,
   },
   {
-    id: 'f4',
-    code: 'فتویٰ نمبر 1035',
-    category: 'نکاح و طلاق',
-    question: 'نکاح میں لڑکی کی اجازت کے بغیر کیا گیا نکاح شرعاً کیا حکم رکھتا ہے؟',
-    answer: 'عاقلہ بالغہ لڑکی کے نکاح میں اس کی دلی رضامندی اور اجازت بنیادی شرط ہے۔ بغیر اجازت اور رضامندی کے زبردستی نکاح منعقد نہیں ہوتا۔',
-    mufti: 'دارالافتاء مرکزی جامعۃ البنات',
-    date: 'صفر المظفر 1448ھ',
+    id: 'ST-104',
+    rollNo: 'JB-2026-04',
+    name: 'مریم نور',
+    fatherName: 'محمد یوسف',
+    darja: 'درجہ ثالثہ (آن لائن)',
+    phone: '0345-8821045',
+    city: 'لاہور',
+    admissionDate: '2025-04-01',
+    status: 'فعال',
+    feeStatus: 'ادا شدہ',
+    attendanceRate: 98,
+  },
+  {
+    id: 'ST-105',
+    rollNo: 'JB-2026-05',
+    name: 'حفصہ رضا',
+    fatherName: 'محمد عمران قادری',
+    darja: 'تجوید و قرأت',
+    phone: '0302-9914231',
+    city: 'قصور',
+    admissionDate: '2026-01-12',
+    status: 'فعال',
+    feeStatus: 'باقی',
+    attendanceRate: 89,
   },
 ];
 
-export const STUDENT_RESULTS: StudentResult[] = [
+export const INITIAL_ADMISSIONS: JamiaAdmission[] = [
   {
-    rollNo: '10421',
-    regNo: 'TM-KSR-2026-101',
-    name: 'عائشہ صدیقہ بنتِ محمد اسلم',
-    fatherName: 'محمد اسلم قادری',
-    darja: 'درجہ عالمیہ (سال دوم)',
-    year: 'سالانہ امتحان 2026ء / 1447ھ',
-    board: 'تنظیم المدارس اہلسنت پاکستان',
-    status: 'امتیازی کامیابی',
-    grade: 'ممتاز',
-    totalMarks: 600,
-    obtainedMarks: 558,
-    percentage: '93.0%',
-    subjects: [
-      { subject: 'صحیح بخاری شریف', total: 100, obtained: 95 },
-      { subject: 'صحیح مسلم شریف', total: 100, obtained: 92 },
-      { subject: 'سنن ابوداؤد و ترمذی', total: 100, obtained: 91 },
-      { subject: 'تفسیرِ بیضاوی و جلالین', total: 100, obtained: 94 },
-      { subject: 'فقہ و اصولِ فقہ', total: 100, obtained: 93 },
-      { subject: 'عربی ادب و مقالہ', total: 100, obtained: 93 },
-    ],
+    id: 'ADM-01',
+    studentName: 'سدرہ نعیم',
+    fatherName: 'محمد نعیم اختر',
+    darja: 'درجہ اولیٰ (عالمہ)',
+    phone: '0300-7412589',
+    city: 'قصور',
+    appliedDate: '2026-11-12',
+    type: 'غیر رہائشی',
+    status: 'زیر غور',
   },
   {
-    rollNo: '10422',
-    regNo: 'TM-KSR-2026-102',
-    name: 'فاطمہ بتول بنتِ حاجی عبدالرحمٰن',
-    fatherName: 'حاجی عبدالرحمٰن',
-    darja: 'درجہ عامہ (سال اول)',
-    year: 'سالانہ امتحان 2026ء / 1447ھ',
-    board: 'تنظیم المدارس اہلسنت پاکستان',
-    status: 'امتیازی کامیابی',
-    grade: 'ممتاز',
-    totalMarks: 600,
-    obtainedMarks: 534,
-    percentage: '89.0%',
-    subjects: [
-      { subject: 'ترجمہ و تفسیر القرآن', total: 100, obtained: 92 },
-      { subject: 'میزان الصرف و منشعب', total: 100, obtained: 88 },
-      { subject: 'نحو میر و شرح مائۃ عامل', total: 100, obtained: 90 },
-      { subject: 'نور الایضاح (فقہ)', total: 100, obtained: 91 },
-      { subject: 'سیرتِ طیبہ ﷺ', total: 100, obtained: 89 },
-      { subject: 'تجوید و قراءت', total: 100, obtained: 84 },
-    ],
+    id: 'ADM-02',
+    studentName: 'اقرا شہزادی',
+    fatherName: 'شہزاد احمد',
+    darja: 'آن لائن فرض علوم کورس',
+    phone: '0312-9854120',
+    city: 'فیصل آباد',
+    appliedDate: '2026-11-11',
+    type: 'آن لائن',
+    status: 'زیر غور',
   },
   {
-    rollNo: '10423',
-    regNo: 'TM-KSR-2026-103',
-    name: 'مریم نعیم بنتِ محمد نعیم اشرفی',
-    fatherName: 'محمد نعیم اشرفی',
-    darja: 'درجہ خاصہ (سال اول)',
-    year: 'سالانہ امتحان 2026ء / 1447ھ',
-    board: 'تنظیم المدارس اہلسنت پاکستان',
-    status: 'کامیاب',
+    id: 'ADM-03',
+    studentName: 'ثنا فاطمہ',
+    fatherName: 'حاجی محمد اکرم',
+    darja: 'حفظ القرآن',
+    phone: '0306-4412098',
+    city: 'قصور',
+    appliedDate: '2026-11-08',
+    type: 'رہائشی',
+    status: 'منظور',
+  },
+];
+
+export const INITIAL_STAFF: JamiaStaff[] = [
+  {
+    id: 'EMP-1',
+    code: 'M-01',
+    name: 'صاحبزادہ پیر مفتی محمد ارشاد علی قادری',
+    type: 'معلمہ / استاد',
+    designation: 'ناظمِ اعلیٰ و مدرسِ حدیث',
+    darjaOrDept: 'دورہ حدیث و دارالافتاء',
+    phone: '0300-6588699',
+    salary: 0,
+    salaryStatus: 'ادا شدہ',
+  },
+  {
+    id: 'EMP-2',
+    code: 'M-02',
+    name: 'استاذہ فاضلہ امِ ہانی قادری',
+    type: 'معلمہ / استاد',
+    designation: 'صدر معلمہ درسِ نظامی',
+    darjaOrDept: 'درجہ خامسہ و رابعہ',
+    phone: '0301-5512340',
+    salary: 35000,
+    salaryStatus: 'ادا شدہ',
+  },
+  {
+    id: 'EMP-3',
+    code: 'M-03',
+    name: 'قاریہ زینب عطاریہ',
+    type: 'معلمہ / استاد',
+    designation: 'معلمہ تجوید و حفظ',
+    darjaOrDept: 'شعبہ حفظ و ناظرہ',
+    phone: '0322-7741209',
+    salary: 28000,
+    salaryStatus: 'باقی',
+  },
+  {
+    id: 'EMP-4',
+    code: 'S-01',
+    name: 'حافظ محمد بلال اشرفی',
+    type: 'عملہ',
+    designation: 'ناظمِ دفتر و حسابات',
+    darjaOrDept: 'دفترِ جامعہ',
+    phone: '0304-6620194',
+    salary: 30000,
+    salaryStatus: 'ادا شدہ',
+  },
+];
+
+export const INITIAL_FEES: JamiaFeeRecord[] = [
+  {
+    id: 'F-1',
+    receiptNo: 'RCP-1041',
+    studentName: 'عائشہ صدیقہ',
+    darja: 'درجہ خامسہ',
+    month: 'نومبر 2026',
+    amount: 2500,
+    category: 'ماہانہ فیس',
+    date: '2026-11-05',
+    status: 'ادا شدہ',
+  },
+  {
+    id: 'F-2',
+    receiptNo: 'RCP-1042',
+    studentName: 'مریم نور',
+    darja: 'درجہ ثالثہ (آن لائن)',
+    month: 'نومبر 2026',
+    amount: 2000,
+    category: 'ماہانہ فیس',
+    date: '2026-11-07',
+    status: 'ادا شدہ',
+  },
+  {
+    id: 'F-3',
+    receiptNo: 'RCP-1043',
+    studentName: 'حاجی محمد سلیم (مخیر)',
+    darja: 'عطیات برائے لنگر و طلبہ',
+    month: 'نومبر 2026',
+    amount: 25000,
+    category: 'تعاون / عطیہ',
+    date: '2026-11-10',
+    status: 'ادا شدہ',
+  },
+  {
+    id: 'F-4',
+    receiptNo: 'RCP-1044',
+    studentName: 'خدیجہ بتول',
+    darja: 'حفظ القرآن',
+    month: 'نومبر 2026',
+    amount: 2000,
+    category: 'ماہانہ فیس',
+    date: '2026-11-12',
+    status: 'باقی',
+  },
+];
+
+export const INITIAL_RESULTS: JamiaResult[] = [
+  {
+    id: 'RES-1',
+    rollNo: 'JB-2026-01',
+    studentName: 'عائشہ صدیقہ',
+    fatherName: 'محمد طارق',
+    darja: 'درجہ خامسہ (عالمہ)',
+    examTitle: 'سالانہ امتحان تنظیم المدارس',
+    year: '2026',
+    subjects: [
+      { name: 'تفسیرِ قرآن (جلالین)', max: 100, obtained: 94 },
+      { name: 'اصولِ فقہ (نور الانوار)', max: 100, obtained: 91 },
+      { name: 'فقہ (ہدایہ)', max: 100, obtained: 89 },
+      { name: 'حدیث (مشکوٰۃ المصابیح)', max: 100, obtained: 95 },
+    ],
+    totalObtained: 369,
+    totalMax: 400,
+    position: 'اول پوزیشن',
+    grade: 'ممتاز',
+  },
+  {
+    id: 'RES-2',
+    rollNo: 'JB-2026-02',
+    studentName: 'فاطمہ الزہرا',
+    fatherName: 'حافظ عبدالحمید',
+    darja: 'درجہ رابعہ',
+    examTitle: 'سالانہ امتحان تنظیم المدارس',
+    year: '2026',
+    subjects: [
+      { name: 'ترجمہ قرآن و تفسیر', max: 100, obtained: 88 },
+      { name: 'کنز الدقائق (فقہ)', max: 100, obtained: 86 },
+      { name: 'کافیہ (نحو)', max: 100, obtained: 90 },
+      { name: 'سیرتِ نبوی ﷺ', max: 100, obtained: 92 },
+    ],
+    totalObtained: 356,
+    totalMax: 400,
+    position: 'دوم پوزیشن',
+    grade: 'ممتاز',
+  },
+  {
+    id: 'RES-3',
+    rollNo: 'JB-2026-04',
+    studentName: 'مریم نور',
+    fatherName: 'محمد یوسف',
+    darja: 'درجہ ثالثہ (آن لائن)',
+    examTitle: 'ششماہی امتحان جامعہ ہذا',
+    year: '2026',
+    subjects: [
+      { name: 'مختصر القدوری', max: 100, obtained: 84 },
+      { name: 'ہدایۃ النحو', max: 100, obtained: 82 },
+      { name: 'مرقات (منطق)', max: 100, obtained: 80 },
+      { name: 'تجوید و قرأت', max: 100, obtained: 91 },
+    ],
+    totalObtained: 337,
+    totalMax: 400,
+    position: 'نمایاں کامیابی',
     grade: 'جید جداً',
-    totalMarks: 600,
-    obtainedMarks: 492,
-    percentage: '82.0%',
-    subjects: [
-      { subject: 'اصول الشاشی', total: 100, obtained: 81 },
-      { subject: 'قدوری شریف', total: 100, obtained: 85 },
-      { subject: 'کافیہ و شرح جامی', total: 100, obtained: 80 },
-      { subject: 'ریاض الصالحین', total: 100, obtained: 86 },
-      { subject: 'عربی انشاء و ادب', total: 100, obtained: 79 },
-      { subject: 'مطالعہ عقائدِ اہلسنت', total: 100, obtained: 81 },
-    ],
-  },
-  {
-    rollNo: '20511',
-    regNo: 'TM-KSR-2026-205',
-    name: 'خدیجہ طاہرہ بنتِ غلام مصطفیٰ',
-    fatherName: 'غلام مصطفیٰ رضوی',
-    darja: 'شعبہ حفظ و تجوید',
-    year: 'سالانہ امتحان 2026ء / 1447ھ',
-    board: 'تنظیم المدارس اہلسنت پاکستان',
-    status: 'امتیازی کامیابی',
-    grade: 'ممتاز',
-    totalMarks: 400,
-    obtainedMarks: 382,
-    percentage: '95.5%',
-    subjects: [
-      { subject: 'مکمل حفظِ قرآن (پہلا نصف)', total: 100, obtained: 97 },
-      { subject: 'مکمل حفظِ قرآن (دوسرا نصف)', total: 100, obtained: 96 },
-      { subject: 'قواعدِ تجوید و مخارج', total: 100, obtained: 95 },
-      { subject: 'بنیادی دینیات و نماز', total: 100, obtained: 94 },
-    ],
   },
 ];
 
-export const BANK_ACCOUNTS: DonationAccount[] = [
+export const INITIAL_FIQH_QUESTIONS: FiqhQuestion[] = [
   {
-    id: 'bank-1',
-    label: 'مرکزی جامعۃ البنات فنڈ',
-    bankName: 'میزان بینک لمیٹڈ (قصور برانچ)',
-    accountTitle: 'مرکزی جامعۃ البنات پرانا لاری اڈا قصور',
-    accountNumber: '03006588699',
-    iban: 'برائے مکمل بینک اکاؤنٹ نمبر و آئی بی اے این دفترِ جامعہ سے تصدیق کریں',
-    branch: 'پرانا لاری اڈا، قصور',
+    id: 'FQ-101',
+    questioner: 'محمد وسیم',
+    city: 'قصور',
+    category: 'نماز و طہارت',
+    question: 'اگر کوئی مسافر نماز قصر پڑھے اور مقیم امام کی اقتدا کرے تو کتنی رکعتیں ادا کرے گا؟',
+    answer:
+      'اگر مسافر مقیم امام کی اقتدا میں نماز پڑھے تو اس پر بھی چار رکعتیں پوری پڑھنا واجب ہے، قصر نہیں کرے گا۔ (فتاویٰ رضویہ، بہارِ شریعت)',
+    date: '2026-11-10',
+    status: 'جواب جاری',
   },
   {
-    id: 'bank-2',
-    label: 'ایزی پیسہ / جاز کیش (تعاون نمبر)',
-    bankName: 'موبائل اکاؤنٹ برائے صدقات و زکوٰۃ',
-    accountTitle: 'ناظمِ اعلیٰ مرکزی جامعۃ البنات قصور',
-    accountNumber: '03006588699',
-    iban: 'واٹس ایپ پر رسید ارسال فرما کر تصدیقی میسج حاصل کریں',
-    branch: 'قصور، پاکستان',
+    id: 'FQ-102',
+    questioner: 'بنتِ عبدالرحمٰن',
+    city: 'لاہور',
+    category: 'زکوٰۃ و صدقات',
+    question: 'کیا سونے کے زیورات پر ہر سال زکوٰۃ ادا کرنا لازم ہے جبکہ وہ استعمال میں رہتے ہوں؟',
+    answer:
+      'جی ہاں! فقہِ حنفی کے مطابق استعمال میں رہنے والے سونے چاندی کے زیورات پر بھی نصاب پورا ہونے کی صورت میں ہر سال زکوٰۃ فرض ہے۔',
+    date: '2026-11-08',
+    status: 'جواب جاری',
+  },
+  {
+    id: 'FQ-103',
+    questioner: 'حافظ بلال',
+    city: 'پتوکی',
+    category: 'روزمرہ معاملات',
+    question: 'آن لائن کاروبار میں بیعِ سلم اور پیشگی رقم لینے کی شرعی شرائط کیا ہیں؟',
+    answer: '',
+    date: '2026-11-13',
+    status: 'زیر غور',
   },
 ];
-
-export const PRAYER_TIMES_KASUR = [
-  { name: 'فجر', time: '05:14' },
-  { name: 'ظہر', time: '12:12' },
-  { name: 'عصر', time: '15:38' },
-  { name: 'مغرب', time: '17:19' },
-  { name: 'عشاء', time: '18:41' },
-  { name: 'جمعۃ المبارک', time: '13:15' },
-];
-
-export const CEREMONY_DETAILS = {
-  title: 'سالانہ تقریبِ تقسیمِ اسناد و ردائے فضیلت',
-  arabicTitle: 'الحفل السنوي لتوزيع الشهادات',
-  date: 'ہر سال شعبان المعظم میں انعقاد',
-  venue: 'مرکزی جامعۃ البنات، پرانا لاری اڈا، قصور',
-  patron: 'صاحبزادہ پیر مفتی محمد اختر علی قادری اشرفی رضوی',
-  host: 'صاحبزادہ پیر مفتی محمد ارشاد علی قادری اشرفی رضوی',
-  highlights: [
-    'تنظیم المدارس کے امتحانات میں کامیاب عالمات کو اسنادِ فضیلت',
-    'تکمیلِ حفظِ قرآن کرنے والی طالبات کی حوصلہ افزائی و اعزازات',
-    'اکابر علمائے کرام و مشائخ عظام کے خصوصی اصلاحی بیانات',
-    'پوزیشن ہولڈر طالبات کے لیے خصوصی انعامات و شیلڈز',
-    'امتِ مسلمہ، ملکِ پاکستان اور بانیٔ جامعہ کے لیے اجتماعی دعا',
-  ],
-  schedule: [
-    { time: 'صبح 09:00', item: 'تلاوتِ کلامِ پاک و محفلِ نعتِ رسول مقبول ﷺ' },
-    { time: 'صبح 10:15', item: 'سندِ حدیث و تقاریرِ طالبات' },
-    { time: 'صبح 11:30', item: 'خطابِ خصوصی سرپرستِ اعلیٰ و مشائخِ عظام' },
-    { time: 'دوپہر 12:45', item: 'تقسیمِ اسناد و انعامات اور اجتماعی دعا' },
-  ],
-};
