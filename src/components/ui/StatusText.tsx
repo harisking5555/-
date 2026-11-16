@@ -5,16 +5,21 @@ interface StatusTextProps {
 }
 
 export function StatusText({ status }: StatusTextProps) {
-  const s = status.trim();
+  const s = status.trim().toLowerCase();
 
   if (
+    s === 'active' ||
+    s === 'paid' ||
+    s === 'approved' ||
+    s === 'present' ||
+    s === 'published' ||
+    s.includes('distinction') ||
+    s.includes('first class') ||
     s === 'فعال' ||
     s === 'ادا شدہ' ||
     s === 'منظور' ||
     s === 'حاضر' ||
-    s === 'جواب جاری' ||
-    s === 'ممتاز' ||
-    s === 'جید جداً'
+    s === 'جواب جاری'
   ) {
     return (
       <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700">
@@ -24,7 +29,13 @@ export function StatusText({ status }: StatusTextProps) {
     );
   }
 
-  if (s === 'باقی' || s === 'زیر غور' || s === 'رخصت') {
+  if (
+    s === 'pending' ||
+    s === 'leave' ||
+    s === 'باقی' ||
+    s === 'زیر غور' ||
+    s === 'رخصت'
+  ) {
     return (
       <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-700">
         <Clock className="h-3.5 w-3.5 shrink-0" />
@@ -33,7 +44,14 @@ export function StatusText({ status }: StatusTextProps) {
     );
   }
 
-  if (s === 'غیر فعال' || s === 'مسترد' || s === 'غیر حاضر') {
+  if (
+    s === 'inactive' ||
+    s === 'rejected' ||
+    s === 'absent' ||
+    s === 'غیر فعال' ||
+    s === 'مسترد' ||
+    s === 'غیر حاضر'
+  ) {
     return (
       <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-red-600">
         <XCircle className="h-3.5 w-3.5 shrink-0" />

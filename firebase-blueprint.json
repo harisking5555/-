@@ -1,0 +1,225 @@
+{
+  "entities": {
+    "JamiaSiteConfig": {
+      "title": "JamiaSiteConfig",
+      "description": "Public institution settings, marquee notice, social links, and bank/wallet donation details.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "maxLength": 200 },
+        "subtitle": { "type": "string", "maxLength": 300 },
+        "websiteDomain": { "type": "string", "maxLength": 120 },
+        "address": { "type": "string", "maxLength": 250 },
+        "phone": { "type": "string", "maxLength": 40 },
+        "email": { "type": "string", "maxLength": 120 },
+        "whatsappChannel": { "type": "string", "maxLength": 300 },
+        "facebookUrl": { "type": "string", "maxLength": 300 },
+        "tiktokUrl": { "type": "string", "maxLength": 300 },
+        "heroNotice": { "type": "string", "maxLength": 500 },
+        "annualProgramTitle": { "type": "string", "maxLength": 200 },
+        "annualProgramDate": { "type": "string", "maxLength": 120 },
+        "annualProgramVenue": { "type": "string", "maxLength": 200 },
+        "annualProgramDetails": { "type": "string", "maxLength": 1000 },
+        "bankName": { "type": "string", "maxLength": 120 },
+        "branchName": { "type": "string", "maxLength": 150 },
+        "accountTitle": { "type": "string", "maxLength": 150 },
+        "accountNumber": { "type": "string", "maxLength": 60 },
+        "iban": { "type": "string", "maxLength": 60 },
+        "walletOwnerName": { "type": "string", "maxLength": 120 },
+        "walletNumber": { "type": "string", "maxLength": 40 }
+      },
+      "required": ["name", "phone", "email", "bankName", "accountNumber", "iban"]
+    },
+    "OnlineCourse": {
+      "title": "OnlineCourse",
+      "description": "Academic programs and online classes offered by Jamia.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 200 },
+        "titleEn": { "type": "string", "maxLength": 200 },
+        "duration": { "type": "string", "maxLength": 150 },
+        "durationEn": { "type": "string", "maxLength": 150 },
+        "timing": { "type": "string", "maxLength": 150 },
+        "timingEn": { "type": "string", "maxLength": 150 },
+        "teacher": { "type": "string", "maxLength": 150 },
+        "teacherEn": { "type": "string", "maxLength": 150 },
+        "seats": { "type": "string", "maxLength": 100 },
+        "seatsEn": { "type": "string", "maxLength": 100 },
+        "description": { "type": "string", "maxLength": 1000 },
+        "descriptionEn": { "type": "string", "maxLength": 1000 }
+      },
+      "required": ["id", "title", "titleEn"]
+    },
+    "JamiaResult": {
+      "title": "JamiaResult",
+      "description": "Published examination results searchable by roll number or student name.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 128 },
+        "rollNo": { "type": "string", "maxLength": 40 },
+        "studentName": { "type": "string", "maxLength": 150 },
+        "fatherName": { "type": "string", "maxLength": 150 },
+        "darja": { "type": "string", "maxLength": 120 },
+        "examTitle": { "type": "string", "maxLength": 200 },
+        "year": { "type": "string", "maxLength": 20 },
+        "totalObtained": { "type": "number" },
+        "totalMax": { "type": "number" },
+        "position": { "type": "string", "maxLength": 80 },
+        "grade": { "type": "string", "maxLength": 80 }
+      },
+      "required": ["id", "rollNo", "studentName", "darja", "totalObtained", "totalMax"]
+    },
+    "JamiaAdmission": {
+      "title": "JamiaAdmission",
+      "description": "Online admission applications submitted from the public website.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 128 },
+        "studentName": { "type": "string", "maxLength": 150 },
+        "fatherName": { "type": "string", "maxLength": 150 },
+        "darja": { "type": "string", "maxLength": 150 },
+        "phone": { "type": "string", "maxLength": 40 },
+        "city": { "type": "string", "maxLength": 100 },
+        "appliedDate": { "type": "string", "maxLength": 30 },
+        "type": { "type": "string", "enum": ["Residential", "Day Scholar", "Online"] },
+        "status": { "type": "string", "enum": ["Pending", "Approved", "Rejected"] }
+      },
+      "required": ["id", "studentName", "phone", "status"]
+    },
+    "FiqhQuestion": {
+      "title": "FiqhQuestion",
+      "description": "Darul Ifta Sharia questions submitted by visitors and answered by scholars.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 128 },
+        "questioner": { "type": "string", "maxLength": 120 },
+        "city": { "type": "string", "maxLength": 100 },
+        "category": { "type": "string", "maxLength": 100 },
+        "question": { "type": "string", "maxLength": 2000 },
+        "answer": { "type": "string", "maxLength": 4000 },
+        "date": { "type": "string", "maxLength": 30 },
+        "status": { "type": "string", "enum": ["Published", "Pending"] }
+      },
+      "required": ["id", "questioner", "question", "status"]
+    },
+    "JamiaFeeRecord": {
+      "title": "JamiaFeeRecord",
+      "description": "Student fees and public online donation records.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 128 },
+        "receiptNo": { "type": "string", "maxLength": 40 },
+        "studentName": { "type": "string", "maxLength": 200 },
+        "darja": { "type": "string", "maxLength": 150 },
+        "month": { "type": "string", "maxLength": 40 },
+        "amount": { "type": "number" },
+        "category": { "type": "string", "enum": ["Monthly Fee", "Donation / Sadaqat", "Admission Fee"] },
+        "paymentMethod": { "type": "string", "enum": ["MCB Bank", "EasyPaisa", "JazzCash", "Cash Office"] },
+        "date": { "type": "string", "maxLength": 30 },
+        "status": { "type": "string", "enum": ["Paid", "Pending"] }
+      },
+      "required": ["id", "receiptNo", "studentName", "amount", "category", "status"]
+    },
+    "JamiaStudent": {
+      "title": "JamiaStudent",
+      "description": "Enrolled student directory (Admin-only).",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 128 },
+        "rollNo": { "type": "string", "maxLength": 40 },
+        "name": { "type": "string", "maxLength": 150 },
+        "fatherName": { "type": "string", "maxLength": 150 },
+        "darja": { "type": "string", "maxLength": 150 },
+        "phone": { "type": "string", "maxLength": 40 },
+        "city": { "type": "string", "maxLength": 100 }
+      },
+      "required": ["id", "rollNo", "name"]
+    },
+    "JamiaStaff": {
+      "title": "JamiaStaff",
+      "description": "Teachers & staff directory and payroll status (Admin-only).",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 128 },
+        "code": { "type": "string", "maxLength": 30 },
+        "name": { "type": "string", "maxLength": 150 },
+        "type": { "type": "string", "enum": ["Teacher", "Staff"] },
+        "designation": { "type": "string", "maxLength": 150 },
+        "salary": { "type": "number" },
+        "salaryStatus": { "type": "string", "enum": ["Paid", "Pending"] }
+      },
+      "required": ["id", "name", "type"]
+    },
+    "LeadershipProfile": {
+      "title": "LeadershipProfile",
+      "description": "Founders and Spiritual Leadership portrait cards.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 128 },
+        "order": { "type": "number" },
+        "badge": { "type": "string", "maxLength": 100 },
+        "badgeEn": { "type": "string", "maxLength": 100 },
+        "name": { "type": "string", "maxLength": 300 },
+        "nameEn": { "type": "string", "maxLength": 300 },
+        "role": { "type": "string", "maxLength": 300 },
+        "roleEn": { "type": "string", "maxLength": 300 },
+        "image": { "type": "string", "maxLength": 500 }
+      },
+      "required": ["id", "order", "name", "image"]
+    },
+    "GalleryPhoto": {
+      "title": "GalleryPhoto",
+      "description": "Campus and event photo gallery items.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 200 },
+        "titleEn": { "type": "string", "maxLength": 200 },
+        "src": { "type": "string", "maxLength": 500 }
+      },
+      "required": ["id", "title", "src"]
+    }
+  },
+  "firestore": {
+    "/siteConfig/main": {
+      "schema": { "$ref": "#/entities/JamiaSiteConfig" },
+      "description": "Main public site settings and bank details."
+    },
+    "/courses/{courseId}": {
+      "schema": { "$ref": "#/entities/OnlineCourse" },
+      "description": "Online courses and academic departments."
+    },
+    "/results/{resultId}": {
+      "schema": { "$ref": "#/entities/JamiaResult" },
+      "description": "Published exam results."
+    },
+    "/admissions/{admissionId}": {
+      "schema": { "$ref": "#/entities/JamiaAdmission" },
+      "description": "Online student admission applications."
+    },
+    "/fiqhQuestions/{questionId}": {
+      "schema": { "$ref": "#/entities/FiqhQuestion" },
+      "description": "Darul Ifta Q&A records."
+    },
+    "/fees/{feeId}": {
+      "schema": { "$ref": "#/entities/JamiaFeeRecord" },
+      "description": "Fee receipts and online donation confirmations."
+    },
+    "/students/{studentId}": {
+      "schema": { "$ref": "#/entities/JamiaStudent" },
+      "description": "Enrolled student directory."
+    },
+    "/staff/{staffId}": {
+      "schema": { "$ref": "#/entities/JamiaStaff" },
+      "description": "Faculty & staff payroll directory."
+    },
+    "/leadership/{leaderId}": {
+      "schema": { "$ref": "#/entities/LeadershipProfile" },
+      "description": "Founders & Spiritual Leadership cards."
+    },
+    "/gallery/{photoId}": {
+      "schema": { "$ref": "#/entities/GalleryPhoto" },
+      "description": "Photo gallery items."
+    }
+  }
+}

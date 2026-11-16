@@ -1,58 +1,74 @@
 import { FormEvent, useState } from 'react';
-import { Lock, Mail, Eye, EyeOff, ArrowRight, GraduationCap, ShieldCheck } from 'lucide-react';
-import { JamiaSiteConfig } from '../types/jamia';
+import { motion } from 'motion/react';
+import { Lock, Mail, Eye, EyeOff, ArrowLeft, GraduationCap, ShieldCheck } from 'lucide-react';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../lib/firebase';
 
 interface AdminLoginPageProps {
-  siteConfig: JamiaSiteConfig;
   onLoginSuccess: (email: string) => void;
   onBackToWebsite: () => void;
 }
 
-export function AdminLoginPage({
-  siteConfig,
-  onLoginSuccess,
-  onBackToWebsite,
-}: AdminLoginPageProps) {
+export function AdminLoginPage({ onLoginSuccess, onBackToWebsite }: AdminLoginPageProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPass, setShowPass] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    const cleanEmail = email.trim().toLowerCase();
-    if (!cleanEmail || !password.trim()) {
-      setError('براہِ کرم ای میل اور پاس ورڈ دونوں درج کریں۔');
+    const cleanEmail = email.trim();
+    if (!cleanEmail || !password) {
+      setError('Please enter both email address and password.');
       return;
     }
-    if (
-      (cleanEmail === siteConfig.email.toLowerCase() || cleanEmail === 'admin@jamia.edu') &&
-      password === 'jamia786'
-    ) {
-      setError('');
-      onLoginSuccess(email.trim());
-      return;
-    }
-    setError('ای میل یا پاس ورڈ درست نہیں ہے۔ ڈیمو تفصیلات نیچے درج ہیں۔');
-  };
 
-  const fillDemo = () => {
-    setEmail(siteConfig.email);
-    setPassword('jamia786');
+    setLoading(true);
     setError('');
+    try {
+      const credential = await signInWithEmailAndPassword(auth, cleanEmail, password);
+      onLoginSuccess(credential.user.email || cleanEmail);
+    } catch (err: unknown) {
+      const code =
+        typeof err === 'object' && err !== null && 'code' in err
+          ? String((err as { code: string }).code)
+          : '';
+      if (
+        code === 'auth/invalid-credential' ||
+        code === 'auth/wrong-password' ||
+        code === 'auth/user-not-found' ||
+        code === 'auth/invalid-email'
+      ) {
+        setError('Invalid email address or password.');
+      } else if (code === 'auth/too-many-requests') {
+        setError('Too many failed attempts. Please try again later.');
+      } else if (code === 'auth/network-request-failed') {
+        setError('Network error. Please check your internet connection.');
+      } else {
+        setError('Sign-in failed. Please verify your email and password.');
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-[#F8FAFC] px-4 py-10">
-      <div className="w-full max-w-md border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+    <div dir="ltr" className="flex min-h-screen flex-col items-center justify-center bg-[#F8FAFC] px-4 py-10">
+      <motion.div
+        initial={{ opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.35, ease: 'easeOut' }}
+        className="w-full max-w-md border border-slate-200 border-t-4 border-t-[#0F294A] bg-white p-6 shadow-md sm:p-8"
+      >
         <div className="flex items-center justify-between border-b border-slate-100 pb-4">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center bg-[#0F294A] text-white">
               <GraduationCap className="h-5 w-5" />
             </div>
             <div>
-              <h1 className="text-base font-bold text-[#0F294A]">ایڈمن پورٹل لاگ ان</h1>
-              <p className="text-xs text-slate-500">{siteConfig.name}</p>
+              <h1 className="text-base font-bold text-[#0F294A]">Admin Portal Login</h1>
+              <p className="text-xs text-slate-500">Markazi Jamia tul Banat Kasur</p>
             </div>
           </div>
           <button
@@ -60,8 +76,8 @@ export function AdminLoginPage({
             onClick={onBackToWebsite}
             className="inline-flex cursor-pointer items-center gap-1 border border-slate-200 px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50"
           >
-            <ArrowRight className="h-3.5 w-3.5" />
-            <span>ویب سائٹ</span>
+            <ArrowLeft className="h-3.5 w-3.5" />
+            <span>Website</span>
           </button>
         </div>
 
@@ -73,37 +89,39 @@ export function AdminLoginPage({
           )}
 
           <div>
-            <label className="mb-1.5 block font-semibold text-slate-800">ای میل ایڈریس</label>
+            <label className="mb-1.5 block font-semibold text-slate-800">Email Address</label>
             <div className="relative">
-              <Mail className="pointer-events-none absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2 text-slate-400" />
+              <Mail className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-slate-400" />
               <input
+                required
                 type="email"
-                dir="ltr"
+                autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Jamiatulbinnat786@gmail.com"
-                className="h-10 w-full border border-slate-300 bg-white pr-9 pl-3 text-left font-mono-num text-xs text-slate-900 focus:border-[#2563EB] focus:outline-none"
+                placeholder="Enter admin email address"
+                className="h-10 w-full border border-slate-300 bg-white pr-3 pl-9 font-mono-num text-xs text-slate-900 focus:border-[#2563EB] focus:outline-none"
               />
             </div>
           </div>
 
           <div>
-            <label className="mb-1.5 block font-semibold text-slate-800">پاس ورڈ</label>
+            <label className="mb-1.5 block font-semibold text-slate-800">Password</label>
             <div className="relative">
-              <Lock className="pointer-events-none absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2 text-slate-400" />
+              <Lock className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-slate-400" />
               <input
+                required
                 type={showPass ? 'text' : 'password'}
-                dir="ltr"
+                autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="h-10 w-full border border-slate-300 bg-white pr-9 pl-9 text-left font-mono-num text-xs text-slate-900 focus:border-[#2563EB] focus:outline-none"
+                placeholder="Enter password"
+                className="h-10 w-full border border-slate-300 bg-white pr-9 pl-9 font-mono-num text-xs text-slate-900 focus:border-[#2563EB] focus:outline-none"
               />
               <button
                 type="button"
                 onClick={() => setShowPass((p) => !p)}
-                aria-label="پاس ورڈ دکھائیں یا چھپائیں"
-                className="absolute top-1/2 left-2.5 -translate-y-1/2 cursor-pointer text-slate-400 hover:text-slate-700"
+                aria-label="Toggle password visibility"
+                className="absolute top-1/2 right-2.5 -translate-y-1/2 cursor-pointer text-slate-400 hover:text-slate-700"
               >
                 {showPass ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
@@ -112,35 +130,14 @@ export function AdminLoginPage({
 
           <button
             type="submit"
-            className="flex h-10 w-full cursor-pointer items-center justify-center gap-2 bg-[#0F294A] text-sm font-bold text-white transition-colors hover:bg-[#193B68]"
+            disabled={loading}
+            className="flex h-10 w-full cursor-pointer items-center justify-center gap-2 bg-[#0F294A] text-sm font-bold text-white transition-colors hover:bg-[#193B68] disabled:cursor-not-allowed disabled:opacity-70"
           >
             <ShieldCheck className="h-4 w-4" />
-            <span>ایڈمن پینل کھولیں</span>
+            <span>{loading ? 'Signing In...' : 'Sign In to Admin Panel'}</span>
           </button>
         </form>
-
-        {/* Prototype Demo Credentials Box */}
-        <div className="mt-6 border border-slate-200 bg-slate-50 p-3.5 text-xs">
-          <div className="flex items-center justify-between gap-2">
-            <span className="font-bold text-[#0F294A]">ڈیمو ایڈمن لاگ ان تفصیلات</span>
-            <button
-              type="button"
-              onClick={fillDemo}
-              className="cursor-pointer bg-[#2563EB] px-2.5 py-1 text-[11px] font-semibold text-white hover:bg-[#1D4ED8]"
-            >
-              خودکار پُر کریں
-            </button>
-          </div>
-          <div className="mt-2 space-y-1 text-slate-600" dir="ltr">
-            <p className="font-mono-num">
-              Email: <span className="font-semibold text-slate-900">{siteConfig.email}</span>
-            </p>
-            <p className="font-mono-num">
-              Password: <span className="font-semibold text-slate-900">jamia786</span>
-            </p>
-          </div>
-        </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

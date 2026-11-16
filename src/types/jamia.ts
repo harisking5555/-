@@ -7,7 +7,8 @@ export type PublicSection =
   | 'results'
   | 'program'
   | 'gallery'
-  | 'admissions';
+  | 'admissions'
+  | 'donations';
 
 export type AdminRoute =
   | 'dashboard'
@@ -30,8 +31,8 @@ export interface JamiaStudent {
   phone: string;
   city: string;
   admissionDate: string;
-  status: 'فعال' | 'غیر فعال' | 'فارغ التحصیل';
-  feeStatus: 'ادا شدہ' | 'باقی';
+  status: 'Active' | 'Inactive' | 'Graduated';
+  feeStatus: 'Paid' | 'Pending';
   attendanceRate: number;
 }
 
@@ -43,20 +44,20 @@ export interface JamiaAdmission {
   phone: string;
   city: string;
   appliedDate: string;
-  type: 'رہائشی' | 'غیر رہائشی' | 'آن لائن';
-  status: 'زیر غور' | 'منظور' | 'مسترد';
+  type: 'Residential' | 'Day Scholar' | 'Online';
+  status: 'Pending' | 'Approved' | 'Rejected';
 }
 
 export interface JamiaStaff {
   id: string;
   code: string;
   name: string;
-  type: 'معلمہ / استاد' | 'عملہ';
+  type: 'Teacher' | 'Staff';
   designation: string;
   darjaOrDept: string;
   phone: string;
   salary: number;
-  salaryStatus: 'ادا شدہ' | 'باقی';
+  salaryStatus: 'Paid' | 'Pending';
 }
 
 export interface JamiaFeeRecord {
@@ -66,9 +67,10 @@ export interface JamiaFeeRecord {
   darja: string;
   month: string;
   amount: number;
-  category: 'ماہانہ فیس' | 'تعاون / عطیہ' | 'داخلہ فیس';
+  category: 'Monthly Fee' | 'Donation / Sadaqat' | 'Admission Fee';
+  paymentMethod: 'MCB Bank' | 'EasyPaisa' | 'JazzCash' | 'Cash Office';
   date: string;
-  status: 'ادا شدہ' | 'باقی';
+  status: 'Paid' | 'Pending';
 }
 
 export interface JamiaResult {
@@ -79,11 +81,11 @@ export interface JamiaResult {
   darja: string;
   examTitle: string;
   year: string;
-  subjects: { name: string; max: number; obtained: number }[];
+  subjects: { name: string; nameUr?: string; max: number; obtained: number }[];
   totalObtained: number;
   totalMax: number;
   position: string;
-  grade: 'ممتاز' | 'جید جداً' | 'جید' | 'مقبول';
+  grade: 'Distinction (Mumtaz)' | 'First Class (Jayyid Jiddan)' | 'Second Class (Jayyid)';
 }
 
 export interface FiqhQuestion {
@@ -94,26 +96,53 @@ export interface FiqhQuestion {
   question: string;
   answer: string;
   date: string;
-  status: 'جواب جاری' | 'زیر غور';
+  status: 'Published' | 'Pending';
 }
 
 export interface OnlineCourse {
   id: string;
   title: string;
+  titleEn: string;
   duration: string;
+  durationEn: string;
   timing: string;
+  timingEn: string;
   teacher: string;
+  teacherEn: string;
   seats: string;
+  seatsEn: string;
   description: string;
+  descriptionEn: string;
+}
+
+export interface LeadershipProfile {
+  id: string;
+  order: number;
+  badge: string;
+  badgeEn: string;
+  name: string;
+  nameEn: string;
+  role: string;
+  roleEn: string;
+  image: string;
+}
+
+export interface GalleryPhoto {
+  id: string;
+  title: string;
+  titleEn: string;
+  src: string;
 }
 
 export interface JamiaSiteConfig {
   name: string;
   subtitle: string;
+  websiteDomain: string;
   address: string;
   phone: string;
   email: string;
   whatsappChannel: string;
+  facebookUrl: string;
   tiktokUrl: string;
   heroNotice: string;
   annualProgramTitle: string;
@@ -121,8 +150,10 @@ export interface JamiaSiteConfig {
   annualProgramVenue: string;
   annualProgramDetails: string;
   bankName: string;
+  branchName: string;
   accountTitle: string;
   accountNumber: string;
   iban: string;
-  easypaisa: string;
+  walletOwnerName: string;
+  walletNumber: string;
 }

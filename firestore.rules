@@ -1,0 +1,137 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.uid == 'k3Hb0krBrCNxcWeoODxrZMug1fu2' ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    // 1. Public Website Configuration (Public read, Admin write)
+    match /siteConfig/{docId} {
+      allow get: if isValidId(docId);
+      allow list: if true;
+      allow write: if isValidId(docId) && isAdmin();
+    }
+
+    // 2. Online Courses (Public read, Admin write)
+    match /courses/{courseId} {
+      allow get: if isValidId(courseId);
+      allow list: if true;
+      allow write: if isValidId(courseId) && isAdmin();
+    }
+
+    // 3. Examination Results (Public read, Admin write)
+    match /results/{resultId} {
+      allow get: if isValidId(resultId);
+      allow list: if true;
+      allow write: if isValidId(resultId) && isAdmin();
+    }
+
+    // 4. Leadership Portraits (Public read, Admin write)
+    match /leadership/{leaderId} {
+      allow get: if isValidId(leaderId);
+      allow list: if true;
+      allow write: if isValidId(leaderId) && isAdmin();
+    }
+
+    // 5. Photo Gallery (Public read, Admin write)
+    match /gallery/{photoId} {
+      allow get: if isValidId(photoId);
+      allow list: if true;
+      allow write: if isValidId(photoId) && isAdmin();
+    }
+
+    // 6. Online Darul Ifta Questions
+    // Public can list/get ONLY Published questions; visitors can submit Pending questions with empty answer.
+    match /fiqhQuestions/{questionId} {
+      allow get: if isValidId(questionId) && (isAdmin() || resource.data.status == 'Published');
+      allow list: if isAdmin() || resource.data.status == 'Published';
+      allow create: if isValidId(questionId) && (
+        isAdmin() || (
+          incoming().status == 'Pending' &&
+          incoming().answer == '' &&
+          incoming().question is string &&
+          incoming().question.size() > 0 &&
+          incoming().question.size() <= 2000 &&
+          incoming().questioner is string &&
+          incoming().questioner.size() <= 120
+        )
+      );
+      allow update, delete: if isValidId(questionId) && isAdmin();
+    }
+
+    // 7. Online Admissions (Visitors can submit Pending applications; only Admin reads/manages PII)
+    match /admissions/{admissionId} {
+      allow get: if isValidId(admissionId) && isAdmin();
+      allow list: if isAdmin();
+      allow create: if isValidId(admissionId) && (
+        isAdmin() || (
+          incoming().status == 'Pending' &&
+          incoming().studentName is string &&
+          incoming().studentName.size() > 0 &&
+          incoming().studentName.size() <= 150 &&
+          incoming().phone is string &&
+          incoming().phone.size() > 0 &&
+          incoming().phone.size() <= 40
+        )
+      );
+      allow update, delete: if isValidId(admissionId) && isAdmin();
+    }
+
+    // 8. Fees & Donations Ledger (Visitors can submit Donation confirmations; only Admin reads/updates)
+    match /fees/{feeId} {
+      allow get: if isValidId(feeId) && isAdmin();
+      allow list: if isAdmin();
+      allow create: if isValidId(feeId) && (
+        isAdmin() || (
+          incoming().category == 'Donation / Sadaqat' &&
+          incoming().status == 'Pending' &&
+          incoming().amount is number &&
+          incoming().amount > 0 &&
+          incoming().amount <= 10000000 &&
+          incoming().studentName is string &&
+          incoming().studentName.size() > 0 &&
+          incoming().studentName.size() <= 200
+        )
+      );
+      allow update, delete: if isValidId(feeId) && isAdmin();
+    }
+
+    // 9. Students Directory (Strict Admin-Only PII Protection)
+    match /students/{studentId} {
+      allow get, write: if isValidId(studentId) && isAdmin();
+      allow list: if isAdmin();
+    }
+
+    // 10. Teachers & Staff Directory (Strict Admin-Only PII & Payroll Protection)
+    match /staff/{staffId} {
+      allow get, write: if isValidId(staffId) && isAdmin();
+      allow list: if isAdmin();
+    }
+
+    // 11. Daily Attendance Register (Strict Admin-Only)
+    match /attendance/{dateId} {
+      allow get, write: if isValidId(dateId) && isAdmin();
+      allow list: if isAdmin();
+    }
+  }
+}
